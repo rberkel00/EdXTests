@@ -67,9 +67,8 @@ public class Project {
 			boolean username = false;
 			boolean email = false;
 
-			List<Expression> exps = parser.findExpressionsOfType("void main(String[])");
-			for (Expression e : exps) {
-				System.out.println("Ex: " + e.toString() + " Type: " + e.getClass());
+			List<Node> exps = parser.findPieces("void main(String[])");
+			for (Node e : exps) {
 				if (e instanceof ObjectCreationExpr) {
 					ObjectCreationExpr oce = (ObjectCreationExpr)e;
 					if (oce.getType().asString().equals("Scanner")) {
@@ -83,15 +82,15 @@ public class Project {
 				}
 			}
 
-			List<Expression> ex = parser.findExpressionsOfType("boolean isPrime(int)");
-			for (Expression es : ex) {
+			List<Node> ex = parser.findPieces("boolean isPrime(int)");
+			for (Node es : ex) {
 				if (es instanceof ConditionalExpr) {
 					tests[6].setResult(true);
 				}
 			}
 
-			List<Statement> st = parser.findStatements("boolean isPrime(int)");
-			for (Statement s : st) {
+			List<Node> st = parser.findPieces("boolean isPrime(int)");
+			for (Node s : st) {
 				if (s instanceof IfStmt) {
 					tests[6].setResult(true);
 				} else if (s instanceof SwitchStmt) {
