@@ -26,7 +26,7 @@ public class Project {
 				new TestCase("Test 7", "isPrime uses a selection construct (if or switch statement) to identify factor", "Completion", 1),
 				new TestCase("Test 8", "isPrime uses a repetition construct (while, for, do-while, etc) to identify factor", "Completion", 1),
 				new TestCase("Test 9", "Main method prints the orignal number with the answer", "Correctness", 1),
-				new TestCase("Test 10", "output is correct case 1 (input is 1, which is not prime)", "Correctness", 2),
+				new TestCase("Test 10", "output is correct case 1 (input is 0, which is not prime)", "Correctness", 2),
 				new TestCase("Test 11", "output is correct case 2 (input is a large prime number)", "Correctness", 2),
 				new TestCase("Test 12", "output is correct case 3 (input is a large non-prime number)", "Correctness", 2)
 			};
