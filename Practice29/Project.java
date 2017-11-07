@@ -26,7 +26,7 @@ public class Project {
 				System.out.println("Practice.java does not compile.");
 			} else {
 				tests[0].setResult(true);
-				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*myAry\\[11\\] stores 5.*"));
+				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*Jan.*Dec.*"));
 			}
 
 			Parser parser = new Parser();
