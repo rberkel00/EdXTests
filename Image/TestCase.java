@@ -232,6 +232,34 @@ public class TestCase {
 		return false;
 	}
 
+	public static String runMain(String path, String filename, File input) throws Exception {
+		if (compile(new File(path+"/"+filename + ".java"))) {
+
+			//create process
+			Process p = Runtime.getRuntime().exec("java -cp " + path + " " + filename);
+			//if there is an input file, read from it and write to process output
+			if (input != null) {
+				Scanner read = new Scanner(input);
+				PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(p.getOutputStream())));
+				while (read.hasNextLine()) {
+					pw.println(read.nextLine());
+				}
+				pw.close();
+			}
+			p.waitFor();
+			//Read from process output and test against regex
+			Scanner s = new Scanner(p.getInputStream());
+      String out = "";
+      String line;
+    	while (s.hasNextLine()) {
+				line = s.nextLine();
+      	out += line + "\n";
+      }
+			return out;
+		}
+		return null;
+	}
+
 
 	private static String commentsHelper(String file) {
 		char[] dots = file.toCharArray();

@@ -18,30 +18,47 @@ public class Project {
 		try {
 			TestCase[] tests = {
 				new TestCase("Test 1", "File compiles", "Completion", 1),
-				new TestCase("Test 2", "Two for loops are created", "Completion", 1),
-				new TestCase("Test 3", "Output is correct", "Completion", 1)
+				new TestCase("Test 2", "Repetition construct (loop) is created in filterRed()", "Completion", 1),
+				new TestCase("Test 3", "pixels is initialized with the correct lengths", "Correctness", 1),
+				new TestCase("Test 4", "Output is correct (there are no \"majority red\" pixels)", "Correctness", 1)
 			};
 
-			if (!TestCase.compile(new File("Practice.java"))) {
-				System.out.println("Practice.java does not compile.");
+			if (!TestCase.compile(new File("Image.java"))) {
+				System.out.println("Image.java does not compile.");
 			} else {
 				tests[0].setResult(true);
-				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*3.*4.*1.*"));
+				String output = TestCase.runMain(".", "Image", null);
+				int count = 0;
+				for (int i = 0; i < output.length(); i++) {
+					i = output.indexOf("td style=", i);
+					if (i == -1) i = output.length();
+					else count++;
+				}
+				if (count == 240) tests[2].setResult(true);
+			}
+			Parser parser = new Parser();
+			if (parser.parse("Image.java")) {
+
+			String[] methods = {"void filterRed()"};
+			File[] files = parser.replace(methods, "asnlib/Image.java");
+
+			if (files[0] != null) {
+				tests[3].setResult(!TestCase.runMain(files[0].getParent(), "Image", null, "(?s).*failed.*"));
 			}
 
-			Parser parser = new Parser();
-			int count = 0;
-			if (parser.parse("Practice.java")) {
-				List<Node> exps = parser.findPieces("int howManyNeighbors(boolean[][], int, int)");
+				List<Node> exps = parser.findPieces("void filterRed()");
 				for (Node e : exps) {
 					//System.out.println("Expression: " + e.toString() + " Type: " + e.getClass());
 					if (e instanceof ForStmt) {
-						count++;
+						tests[1].setResult(true);
+					} else if (e instanceof DoStmt) {
+						tests[1].setResult(true);
+					} else if (e instanceof WhileStmt) {
+						tests[1].setResult(true);
 					}
 				}
 			}
 
-			if (count > 1) tests[1].setResult(true);
  			TestCase.pushAll(tests);
 
 		} catch (Exception e) {
