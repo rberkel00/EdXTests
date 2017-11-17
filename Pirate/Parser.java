@@ -204,187 +204,171 @@ public class Parser {
 		}
 	}
 
-	/**
-	* Returns list of small expressions extracted from all statements found in the method corresponding to "method" parameter.
-	* <p>
-	* Expression types are defined in JavaParser project: com.github.javaparser.ast.expr.*
-	* @param method method signature to find statements from, matches format returnType MethodName (paramType, paramType, paramType, ... )
-	* @return list of expressions that are instances of the class defined by exprclass found in the indicated method
-	* @throws Exception any exception
-	*/
 
-	public List<Expression> findExpressionsOfType(String method) throws Exception {
-		for (MethodDeclaration m : methods) {
-			if (m.getDeclarationAsString(false, false, false).equals(method)) {
-				//find the statement
-				List<Expression> expressions = new ArrayList<Expression>();
-				NodeList<Statement> statements = m.getBody().get().getStatements();
-				for (Statement s : statements) {
-					if (s instanceof ExpressionStmt) {
-						Expression e = ((ExpressionStmt)s).getExpression();
-						List<Expression> list = getAllExpressions(e);
-						for (Expression x : list) {
-							expressions.add(x);
+	//Find method calls and matches and return those signatures
+	public List<String> findHelperMethods (BlockStmt bs) throws Exception {
+		List<String> signatures = new ArrayList<String>();
+		List<Node> nodes = getAllPieces(bs);
+		for (Node n : nodes) {
+			if (n instanceof MethodCallExpr) {
+				MethodCallExpr o = (MethodCallExpr)n;
+				for (MethodDeclaration m : methods) {
+					//if method call matches method declaration, add to list (check name)
+					if (m.getName().asString().equals(o.getName().asString())) {
+						//check parameters (loop through)
+						NodeList<Parameter> mparameters = m.getParameters();
+						MethodCallExprMetaModel mcemm = o.getMetaModel();
+						PropertyMetaModel pmm = mcemm.argumentsPropertyMetaModel;
+						System.out.println("PMM: " + pmm.toString());
+						System.out.println("node reference : " + pmm.getNodeReference().get().toString());
+						BaseNodeMetaModel bnmm = pmm.getNodeReference().get();
+						System.out.println("field name: " + bnmm.getMetaModelFieldName());
+						List<PropertyMetaModel>	list = bnmm.getAllPropertyMetaModels();
+						for (PropertyMetaModel pmodel : list) {
+							System.out.println("pmodel: " + pmodel.toString());
 						}
+						/*List<PropertyMetaModel> oparameters =
+						for (int i = 0; i < parameters.length; i++) {
+							//how do I find o.parameter type?
+							if (p.getType().asString().equals())
+						}*/
 					}
 				}
-				return expressions;
-			}
-		}
-		for (ConstructorDeclaration m : constructors) {
-			if (m.getDeclarationAsString(false, false, false).equals(method)) {
-				//find the statement
-				List<Expression> expressions = new ArrayList<Expression>();
-				NodeList<Statement> statements = m.getBody().getStatements();
-				for (Statement s : statements) {
-					if (s instanceof ExpressionStmt) {
-						Expression e = ((ExpressionStmt)s).getExpression();
-						List<Expression> list = getAllExpressions(e);
-						for (Expression x : list) {
-							expressions.add(x);
-						}
-					}
-				}
-				return expressions;
 			}
 		}
 		return null;
 	}
 
+
 	/**
-	* Returns list of small statements extracted from all statements found in the method corresponding to "method" parameter.
+	* Returns list of small expressions or statements extracted from all statements found in the method corresponding to "method" parameter.
 	* <p>
 	* Expression types are defined in JavaParser project: com.github.javaparser.ast.expr.*
+	* Statement types are definded in JavaParser project: com.github.javaparser.ast.stmt.*
 	* @param method method signature to find statements from, matches format returnType MethodName (paramType, paramType, paramType, ... )
-	* @return list of expressions that are instances of the class defined by exprclass found in the indicated method
+	* @return list of nodes (expressions or statements) that are instances of the class defined by exprclass found in the indicated method
 	* @throws Exception any exception
 	*/
 
-	public List<Statement> findStatements(String method) throws Exception {
+	public List<Node> findPieces(String method) throws Exception {
+		List<Node> expressions = new ArrayList<Node>();
 		for (MethodDeclaration m : methods) {
 			if (m.getDeclarationAsString(false, false, false).equals(method)) {
-				//find the statement
-				List<Expression> expressions = new ArrayList<Expression>();
 				NodeList<Statement> statements = m.getBody().get().getStatements();
-				return statements;
+				for (Statement s : statements) {
+					expressions.addAll(getAllPieces(s));
+				}
 			}
 		}
-		for (ConstructorDeclaration m : constructors) {
-			if (m.getDeclarationAsString(false, false, false).equals(method)) {
-				//find the statement
-				List<Expression> expressions = new ArrayList<Expression>();
-				NodeList<Statement> statements = m.getBody().getStatements();
-				return statements;
-			}
-		}
-		return null;
+		return expressions;
 	}
 
 	/**
-	* Helper method (made public for possible future cases) for findExpressionsOfType. Recursive method to find all pieces of an Expression.
-	* @param ex root expression from which to derive all smaller Expressions
-	* @return list of all found Expressions, including all nodes not just leaf nodes
+	* Helper method (made public for possible future cases) for findPieces. Recursive method to find all pieces of an expression or statement.
+	* @param ex root node from which to derive all smaller expressions or statements. Node should be an expression or statement
+	* @return list of all found expressions and statements, including all nodes not just leaf nodes
 	* @throws Exception any exception
 	*/
 
-	public List<Expression> getAllExpressions(Expression ex) throws Exception {
-		List<Expression> e = new ArrayList<Expression>();
+	public List<Node> getAllPieces(Node ex) throws Exception {
+		List<Node> e = new ArrayList<Node>();
 		e.add(ex);
 		if (ex instanceof ArrayAccessExpr) {
 			ArrayAccessExpr ae = (ArrayAccessExpr)ex;
-			e.addAll(getAllExpressions(ae.getName()));
-			e.addAll(getAllExpressions(ae.getIndex()));
+			e.addAll(getAllPieces(ae.getName()));
+			e.addAll(getAllPieces(ae.getIndex()));
 		}
 		else if (ex instanceof ArrayInitializerExpr) {
 			ArrayInitializerExpr ae = (ArrayInitializerExpr)ex;
 			NodeList<Expression> exs = ae.getValues();
 			for (Expression s : exs) {
-				e.addAll(getAllExpressions(s));
+				e.addAll(getAllPieces(s));
 			}
 		}
 		else if (ex instanceof AssignExpr) {
 			AssignExpr ae = (AssignExpr)ex;
-			e.addAll(getAllExpressions(ae.getTarget()));
-			e.addAll(getAllExpressions(ae.getValue()));
+			e.addAll(getAllPieces(ae.getTarget()));
+			e.addAll(getAllPieces(ae.getValue()));
 		}
 		else if (ex instanceof BinaryExpr) {
 			BinaryExpr be = (BinaryExpr)ex;
-			e.addAll(getAllExpressions(be.getLeft()));
-			e.addAll(getAllExpressions(be.getRight()));
+			e.addAll(getAllPieces(be.getLeft()));
+			e.addAll(getAllPieces(be.getRight()));
 		}
 		else if (ex instanceof CastExpr) {
 			CastExpr be = (CastExpr)ex;
-			e.addAll(getAllExpressions(be.getExpression()));
+			e.addAll(getAllPieces(be.getExpression()));
 		}
 		else if (ex instanceof ConditionalExpr) {
 			ConditionalExpr be = (ConditionalExpr)ex;
-			e.addAll(getAllExpressions(be.getCondition()));
-			e.addAll(getAllExpressions(be.getElseExpr()));
-			e.addAll(getAllExpressions(be.getThenExpr()));
+			e.addAll(getAllPieces(be.getCondition()));
+			e.addAll(getAllPieces(be.getElseExpr()));
+			e.addAll(getAllPieces(be.getThenExpr()));
 		}
 		else if (ex instanceof EnclosedExpr) {
 			EnclosedExpr be = (EnclosedExpr)ex;
 			if (be.getInner().isPresent()) {
-				e.addAll(getAllExpressions(be.getInner().get()));
+				e.addAll(getAllPieces(be.getInner().get()));
 			}
 		}
 		else if (ex instanceof FieldAccessExpr) {
 			FieldAccessExpr be = (FieldAccessExpr)ex;
-			e.addAll(getAllExpressions(be.getScope()));
+			e.addAll(getAllPieces(be.getScope()));
 		}
 		else if (ex instanceof InstanceOfExpr) {
 			InstanceOfExpr be = (InstanceOfExpr)ex;
-			e.addAll(getAllExpressions(be.getExpression()));
+			e.addAll(getAllPieces(be.getExpression()));
 		}
 		else if (ex instanceof InstanceOfExpr) {
 			InstanceOfExpr be = (InstanceOfExpr)ex;
-			e.addAll(getAllExpressions(be.getExpression()));
+			e.addAll(getAllPieces(be.getExpression()));
 		}
 		else if (ex instanceof LambdaExpr) {
 			LambdaExpr ae = (LambdaExpr)ex;
 			if (ae.getExpressionBody().isPresent()) {
-				e.addAll(getAllExpressions(ae.getExpressionBody().get()));
+				e.addAll(getAllPieces(ae.getExpressionBody().get()));
 			}
+			e.addAll(getAllPieces(ae.getBody()));
 		}
 		else if (ex instanceof MethodCallExpr) {
 			MethodCallExpr ae = (MethodCallExpr)ex;
 			NodeList<Expression> exs = ae.getArguments();
 			for (Expression s : exs) {
-				e.addAll(getAllExpressions(s));
+				e.addAll(getAllPieces(s));
 			}
 			if (ae.getScope().isPresent()) {
-				e.addAll(getAllExpressions(ae.getScope().get()));
+				e.addAll(getAllPieces(ae.getScope().get()));
 			}
 		}
 		else if (ex instanceof MethodReferenceExpr) {
 			MethodReferenceExpr be = (MethodReferenceExpr)ex;
-			e.addAll(getAllExpressions(be.getScope()));
+			e.addAll(getAllPieces(be.getScope()));
 		}
 		else if (ex instanceof ObjectCreationExpr) {
 			ObjectCreationExpr ae = (ObjectCreationExpr)ex;
 			NodeList<Expression> exs = ae.getArguments();
 			for (Expression s : exs) {
-				e.addAll(getAllExpressions(s));
+				e.addAll(getAllPieces(s));
 			}
 			if (ae.getScope().isPresent()) {
-				e.addAll(getAllExpressions(ae.getScope().get()));
+				e.addAll(getAllPieces(ae.getScope().get()));
 			}
 		}
 		else if (ex instanceof SuperExpr) {
 			SuperExpr ae = (SuperExpr)ex;
 			if (ae.getClassExpr().isPresent()) {
-				e.addAll(getAllExpressions(ae.getClassExpr().get()));
+				e.addAll(getAllPieces(ae.getClassExpr().get()));
 			}
 		}
 		else if (ex instanceof ThisExpr) {
 			ThisExpr ae = (ThisExpr)ex;
 			if (ae.getClassExpr().isPresent()) {
-				e.addAll(getAllExpressions(ae.getClassExpr().get()));
+				e.addAll(getAllPieces(ae.getClassExpr().get()));
 			}
 		}
 		else if (ex instanceof UnaryExpr) {
 			UnaryExpr be = (UnaryExpr)ex;
-			e.addAll(getAllExpressions(be.getExpression()));
+			e.addAll(getAllPieces(be.getExpression()));
 		}
 		else if (ex instanceof VariableDeclarationExpr) {
 			VariableDeclarationExpr ae = (VariableDeclarationExpr)ex;
@@ -394,15 +378,144 @@ public class Parser {
 					if (n.get(0) instanceof VariableDeclarator) {
 						VariableDeclarator vd = (VariableDeclarator)n.get(0);
 						if (vd.getInitializer().isPresent()) {
-							e.addAll(getAllExpressions(vd.getInitializer().get()));
+							e.addAll(getAllPieces(vd.getInitializer().get()));
 						}
 					}
 				}
 			}
 			NodeList<AnnotationExpr> exs = ae.getAnnotations();
 			for (AnnotationExpr s : exs) {
-				e.addAll(getAllExpressions(s));
+				e.addAll(getAllPieces(s));
 			}
+		}
+		else if (ex instanceof AssertStmt) {
+			AssertStmt as = (AssertStmt)ex;
+			e.addAll(getAllPieces(as.getCheck()));
+			if (as.getMessage().isPresent()) {
+				e.addAll(getAllPieces(as.getMessage().get()));
+			}
+		}
+		else if (ex instanceof BlockStmt) {
+			BlockStmt bs = (BlockStmt)ex;
+			for (Statement s : bs.getStatements()) {
+				e.addAll(getAllPieces(s));
+			}
+		}
+		else if (ex instanceof BreakStmt) {
+			BreakStmt bs = (BreakStmt)ex;
+		}
+		else if (ex instanceof ContinueStmt) {
+			ContinueStmt cs = (ContinueStmt)ex;
+
+		}
+		else if (ex instanceof DoStmt) {
+			DoStmt ds = (DoStmt)ex;
+			e.addAll(getAllPieces(ds.getBody()));
+			e.addAll(getAllPieces(ds.getCondition()));
+		}
+		else if (ex instanceof EmptyStmt) {
+			EmptyStmt es = (EmptyStmt)ex;
+		}
+		else if (ex instanceof ExplicitConstructorInvocationStmt) {
+			ExplicitConstructorInvocationStmt es = (ExplicitConstructorInvocationStmt)ex;
+			for (Expression ee : es.getArguments()) {
+				e.addAll(getAllPieces(ee));
+			}
+			if (es.getExpression().isPresent()) {
+				e.addAll(getAllPieces(es.getExpression().get()));
+			}
+		}
+		else if (ex instanceof ExpressionStmt) {
+			ExpressionStmt es = (ExpressionStmt)ex;
+			e.addAll(getAllPieces(es.getExpression()));
+		}
+		else if (ex instanceof ForeachStmt) {
+			ForeachStmt fs = (ForeachStmt)ex;
+			e.addAll(getAllPieces(fs.getBody()));
+			e.addAll(getAllPieces(fs.getIterable()));
+			e.addAll(getAllPieces(fs.getVariable()));
+		}
+		else if (ex instanceof ForStmt) {
+			ForStmt fs = (ForStmt)ex;
+			e.addAll(getAllPieces(fs.getBody()));
+			if (fs.getCompare().isPresent()) {
+				e.addAll(getAllPieces(fs.getCompare().get()));
+			}
+			for (Expression ee : fs.getInitialization()) {
+				e.addAll(getAllPieces(ee));
+			}
+			for (Expression ee : fs.getUpdate()) {
+				e.addAll(getAllPieces(ee));
+			}
+		}
+		else if (ex instanceof IfStmt) {
+			IfStmt is = (IfStmt)ex;
+			e.addAll(getAllPieces(is.getCondition()));
+			if (is.getElseStmt().isPresent()) {
+				e.addAll(getAllPieces(is.getElseStmt().get()));
+			}
+			e.addAll(getAllPieces(is.getThenStmt()));
+		}
+		else if (ex instanceof LabeledStmt) {
+			LabeledStmt ls = (LabeledStmt)ex;
+			e.addAll(getAllPieces(ls.getStatement()));
+		}
+		else if (ex instanceof LocalClassDeclarationStmt) {
+			LocalClassDeclarationStmt ls = (LocalClassDeclarationStmt)ex;
+		}
+		else if (ex instanceof ReturnStmt) {
+			ReturnStmt rs = (ReturnStmt)ex;
+			if (rs.getExpression().isPresent()) {
+				e.addAll(getAllPieces(rs.getExpression().get()));
+			}
+		}
+		else if (ex instanceof SwitchEntryStmt) {
+			SwitchEntryStmt ss = (SwitchEntryStmt)ex;
+			if (ss.getLabel().isPresent()) {
+				e.addAll(getAllPieces(ss.getLabel().get()));
+			}
+			for (Statement s : ss.getStatements()) {
+				e.addAll(getAllPieces(s));
+			}
+		}
+		else if (ex instanceof SwitchStmt) {
+			SwitchStmt ss = (SwitchStmt)ex;
+			for (Statement s : ss.getEntries()) {
+				e.addAll(getAllPieces(s));
+			}
+			e.addAll(getAllPieces(ss.getSelector()));
+		}
+		else if (ex instanceof SynchronizedStmt) {
+			SynchronizedStmt ss = (SynchronizedStmt)ex;
+			e.addAll(getAllPieces(ss.getBody()));
+			e.addAll(getAllPieces(ss.getExpression()));
+		}
+		else if (ex instanceof ThrowStmt) {
+			ThrowStmt ts = (ThrowStmt)ex;
+			e.addAll(getAllPieces(ts.getExpression()));
+		}
+		else if (ex instanceof TryStmt) {
+			TryStmt ts = (TryStmt)ex;
+			for (CatchClause cc : ts.getCatchClauses()) {
+				e.addAll(getAllPieces(cc.getBody()));
+			}
+			if (ts.getFinallyBlock().isPresent()) {
+				e.addAll(getAllPieces(ts.getFinallyBlock().get()));
+			}
+			for (Expression ee : ts.getResources()) {
+				e.addAll(getAllPieces(ee));
+			}
+			if (ts.getTryBlock().isPresent()) {
+				e.addAll(getAllPieces(ts.getTryBlock().get()));
+			}
+		}
+		else if (ex instanceof UnparsableStmt) {
+			UnparsableStmt us = (UnparsableStmt)ex;
+		}
+		else if (ex instanceof WhileStmt) {
+			WhileStmt ws = (WhileStmt)ex;
+			e.addAll(getAllPieces(ws.getBody()));
+			e.addAll(getAllPieces(ws.getCondition()));
 		}
 		return e;
 	}

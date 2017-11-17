@@ -204,34 +204,6 @@ public class Parser {
 		}
 	}
 
-
-	//Find method calls and matches and return those signatures
-	public List<String> findHelperMethods (BlockStmt bs) {
-		List<String> signatures = new List<String>();
-		List<Node> nodes = getPieces(bs);
-		for (Node n : nodes) {
-			if (n instanceof MethodCallExpr) {
-				MethodCallExpr o = (MethodCallExpr)n;
-				for (MethodDeclaration m : methods) {
-					//if method call matches method declaration, add to list (check name)
-					if (m.getName().asString().equals(o.getName().asString())) {
-						//check parameters (loop through)
-						List<Node> mparameters = m.getParameters();
-						MethodCallExprMetaModel mcemm = o.getMetaModel();
-						PropertyMetaModel pmm = mcemm.argumentsPropertyMetaModel;
-						System.out.println(pmm.toString());
-						/*List<PropertyMetaModel> oparameters =
-						for (int i = 0; i < parameters.length; i++) {
-							//how do I find o.parameter type?
-							if (p.getType().asString().equals())
-						}*/
-					}
-				}
-			}
-		}
-	}
-
-
 	/**
 	* Returns list of small expressions or statements extracted from all statements found in the method corresponding to "method" parameter.
 	* <p>

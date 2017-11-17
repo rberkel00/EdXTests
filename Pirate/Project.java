@@ -18,7 +18,7 @@ public class Project {
 		try {
 			TestCase[] tests = {
 				new TestCase("Test 1", "Pirate.java exists", "Completion", 1),
-				new TestCase("Test 2", "LeapYear.java compiles", "Completion", 1),
+				new TestCase("Test 2", "Pirate.java compiles", "Completion", 1),
 				new TestCase("Test 3", "Scanner object is created in main method (only create one!)", "Completion", 1),
 				new TestCase("Test 4", "Main method signature is written correctly", "Completion", 1),
 				new TestCase("Test 5", "isLeapYear method signature is written correctly", "Completion", 1),
