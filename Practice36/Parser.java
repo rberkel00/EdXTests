@@ -196,8 +196,30 @@ public class Parser {
 							}
 						}
 					}
+				} else if (n instanceof ConstructorDeclaration) {
+					ConstructorDeclaration toSet = (ConstructorDeclaration)n;
+					if (toSet.getDeclarationAsString(false, false, false).equals(signature)) {
+						for (ConstructorDeclaration m : constructors) {
+							if (m.getDeclarationAsString(false, false, false).equals(signature)) {
+
+								//make modification
+								toSet.setBody(m.getBody());
+								toSet.setParameters(m.getParameters());
+								Random r = new Random();
+								String temp = "temp" + r.nextInt(10000);
+								File directory = new File(temp);
+								directory.mkdir();
+								File newfile = new File(temp + "/" + f.getName());
+								PrintWriter pw = new PrintWriter(newfile);
+								pw.write(cu.toString());
+								pw.close();
+								return newfile;
+							}
+						}
+					}
 				}
 			}
+
 			return null;
 		} catch (Exception e) {
 			return null;

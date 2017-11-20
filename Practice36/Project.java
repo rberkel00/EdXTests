@@ -52,6 +52,14 @@ public class Project {
 					}
 
 				}
+				String[] methods = {"Order(String)", "void makeFood()"};
+				File[] files = parser.replace(methods, "asnlib/Order.java");
+				if (files[0] != null) {
+					tests[2].setResult(TestCase.runMain(files[0].getParent(), "Order", null, "(?s).*Inc.*There are 1 open orders.*Inc.*"));
+				}
+				if (files[1] != null) {
+					tests[3].setResult(TestCase.runMain(files[1].getParent(), "Order", null, "(?s).*Dec.*There are -1 open orders.*Dec.*"));
+				}
 			}
 
 
