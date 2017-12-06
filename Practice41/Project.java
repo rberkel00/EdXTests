@@ -34,7 +34,7 @@ public class Project {
 					if (m.getDeclarationAsString(true, false, false).equals("public double getAmount()")) {
 						tests[2].setResult(true);
 					}
-					if (m.getDeclarationAsString(true, false, false).equals("public void getAmount(double)")) {
+					if (m.getDeclarationAsString(true, false, false).equals("public void setAmount(double)")) {
 						tests[3].setResult(true);
 					}
 				}

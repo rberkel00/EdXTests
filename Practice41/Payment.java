@@ -18,7 +18,7 @@ public class Payment {
 
      /*** TODO: Add a mutator method for the amount field, in which the amount is
                 changed if and only if the input parameter is greater than zero ***/
-                public void getAmount(double amount) {
+                public void setAmount(double amount) {
                   if (amount > 0) {
                     this.amount = amount;
                   }
