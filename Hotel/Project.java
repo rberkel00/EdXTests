@@ -152,6 +152,10 @@ public class Project {
 					if (i < 1) tests[4].setResult(false);
 				}
 			}
+			TestCase.pushAll(tests);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 			/*Parser sparser = new Parser();
 			if (sparser.parse("ParkingSpace.java")) {
