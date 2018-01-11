@@ -9,7 +9,7 @@ public class Hotel {
     rooms = new Room[totalRooms];
     for (int i = 0; i < totalFloors; i++) {
       for (int j = 0; j < roomsperfloor; j++) {
-        if (j + 1 = roomsperfloor) {
+        if (j + 1 == roomsperfloor) {
           rooms[i*roomsperfloor+j] = new Room(i*100+j, "suite");
         } else if (j + 5 >= roomsperfloor) {
           rooms[i*roomsperfloor+j] = new Room(i*100+j, "single king");
@@ -35,9 +35,26 @@ public class Hotel {
   }
 
   public double getOccupancyRate() {
-    return (getNumberOccupied/totalRooms) * 100 / 100;
+    return Math.round(((double)getNumberOccupied()/totalRooms)*100) / 100.0;
   }
 
-  
+  public boolean rentRoom(String type, String name, int days) {
+    for (int i = 0; i < rooms.length; i++) {
+      if (rooms[i].getOccupantName() == null && rooms[i].getRoomType().equals(type)) {
+        return rooms[i].setOccupant(name, days);
+      }
+    }
+    return false;
+  }
+
+  public void advanceDay() {
+    for (int i = 0; i < rooms.length; i++) {
+      rooms[i].advanceDay();
+    }
+  }
+
+  public String toString() {
+    return "The " + hotelName + ": " + getOccupancyRate() * 100 + "% occupied";
+  }
 
 }

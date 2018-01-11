@@ -33,12 +33,16 @@ public class Project {
 				new TestCase("Test 15", "Room advanceDays works if daysRented becomes greater than 0", "Completion", 1),
 				new TestCase("Test 16", "Room toString formats output correctly", "Completion", 1),
 				new TestCase("Test 17", "Room constructor exists", "Completion", 1),
+				new TestCase("Test 18", "Hotel constructor exists", "Completion", 1),
+				new TestCase("Test 19", "Hotel accessor method signatures (3 of them)", "Completion", 1),
+				new TestCase("Test 20", "rentRoom, advanceDay, and toString method signatures", "Completion", 1),
+				new TestCase("Test 21", "Constructor creates rooms with the correct type and numbering (spelling matters!)", "Completion", 1),
+				new TestCase("Test 22", "Accessor methods return the correct result", "Completion", 1),
+				new TestCase("Test 23", "rentRoom puts occupant in next available room", "Completion", 1),
+				new TestCase("Test 24", "rentRoom returns false and does not place occupant if no available rooms", "Completion", 1),
+				new TestCase("Test 25", "advanceDay makes use of Room class advanceDay method for each room", "Completion", 1),
 
-				new TestCase("Test 18", "ParkingSpace setOccupied signature", "Completion", 1),
-				new TestCase("Test 19", "ParkingSpace toString signature", "Completion", 1),
-				new TestCase("Test 20", "", "Completion", 1),
-				new TestCase("Test 21", "", "Completion", 1),
-				new TestCase("Test 22", "", "Completion", 1)
+				new TestCase("Test 26", "toString output formatted correctly", "Completion", 1)
 			};
 			File lot = new File("Room.java");
 			if (!lot.exists()) {
@@ -65,6 +69,100 @@ public class Project {
 
 
 			Parser lparser = new Parser();
+			Parser hparser = new Parser();
+			if (hparser.parse("Hotel.java")) {
+				String[] methods = {"Hotel(String, int, int)","int getTotalRooms()","int getNumberOccupied()", "double getOccupancyRate()", "boolean rentRoom(String, String, int)", "void advanceDay()", "String toString()"};
+				File[] files = hparser.replace(methods, "asnlib/Hotel.java");
+				File tempf = new File("asnlib/Room.java");
+				File temps;
+				boolean[] acc = new boolean[3];
+				boolean[] acc2 = new boolean[3];
+				boolean[] acc3 = new boolean[3];
+
+
+				if (files[0] != null) {
+					temps = new File(files[0].getParent() + "/Room.java");
+					Files.copy(tempf.toPath(), temps.toPath());
+					TestCase.compile(temps);
+					tests[17].setResult(true);
+					tests[20].setResult(!TestCase.runMain(files[0].getParent(), "Hotel", null, "(?s).*Constructor Failed.*"));
+				}
+				if (files[1] != null) {
+					acc[0] = true;
+					temps = new File(files[1].getParent() + "/Room.java");
+					Files.copy(tempf.toPath(), temps.toPath());
+					TestCase.compile(temps);
+					acc3[0] = !TestCase.runMain(files[1].getParent(), "Hotel", null, "(?s).*Accessor Failed.*");
+				}
+				if (files[2] != null) {
+					acc[1] = true;
+					temps = new File(files[2].getParent() + "/Room.java");
+					Files.copy(tempf.toPath(), temps.toPath());
+					TestCase.compile(temps);
+					acc3[1] = !TestCase.runMain(files[2].getParent(), "Hotel", null, "(?s).*Accessor Failed.*");
+ 				}
+				if (files[3] != null) {
+					acc[2] = true;
+					temps = new File(files[3].getParent() + "/Room.java");
+					Files.copy(tempf.toPath(), temps.toPath());
+					TestCase.compile(temps);
+					acc3[2] = !TestCase.runMain(files[3].getParent(), "Hotel", null, "(?s).*Accessor Failed.*");
+				}
+				if (files[4] != null) {
+					acc2[0] = true;
+					temps = new File(files[4].getParent() + "/Room.java");
+					Files.copy(tempf.toPath(), temps.toPath());
+					TestCase.compile(temps);
+					tests[22].setResult(!TestCase.runMain(files[4].getParent(), "Hotel", null, "(?s).*RentRoom 1 Failed.*"));
+					tests[23].setResult(!TestCase.runMain(files[4].getParent(), "Hotel", null, "(?s).*RentRoom 2 Failed.*"));
+				}
+				if (files[5] != null) {
+					acc2[1] = true;
+					temps = new File(files[5].getParent() + "/Room.java");
+					Files.copy(tempf.toPath(), temps.toPath());
+					TestCase.compile(temps);
+					tests[24].setResult(!TestCase.runMain(files[5].getParent(), "Hotel", null, "(?s).*AdvanceDay Failed.*"));
+				}
+				if (files[6] != null) {
+					acc2[2] = true;
+					temps = new File(files[6].getParent() + "/Room.java");
+					Files.copy(tempf.toPath(), temps.toPath());
+					TestCase.compile(temps);
+					tests[25].setResult(TestCase.runMain(files[6].getParent(), "Hotel", null, "(?s).*hotel.*11.0.*occupied.*"));
+				}
+
+				tests[18].setResult(true);
+				tests[19].setResult(true);
+				tests[21].setResult(true);
+				for (int i = 0; i < 3; i++) {
+					if (!acc[i]) {
+						tests[18].setResult(false);
+					}
+					if (!acc2[i]) {
+						tests[19].setResult(false);
+					}
+					if (!acc3[i]) {
+						tests[21].setResult(false);
+					}
+				}
+
+				List<Node> p = hparser.findPieces("void advanceDay()");
+				boolean check = false;
+				for (Node n : p) {
+					if (n instanceof MethodCallExpr) {
+						MethodCallExpr m = (MethodCallExpr)n;
+						if (m.getName().asString().equals("advanceDay")) {
+							check = true;
+						}
+					}
+				}
+				if (!check) {
+					tests[24].setResult(false);
+					System.out.println("check failed");
+				}
+
+			}
+
 			if (lparser.parse("Room.java")) {
 				String[] methods = {"Room(int, String)","int getRoomNumber()","String getRoomType()", "String getOccupantName()", "int getDaysRented()", "boolean setOccupant(String, int)", "void advanceDay()", "String toString()"};
 				File[] files = lparser.replace(methods, "asnlib/Room.java");
@@ -156,66 +254,5 @@ public class Project {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-			/*Parser sparser = new Parser();
-			if (sparser.parse("ParkingSpace.java")) {
-				String[] methods = {"ParkingSpace(int, char, boolean)","int getSpaceNum()","char getFloor()","boolean getCompact()","boolean getOccupied()","void setOccupied(boolean)","String toString()"};
-				File[] files = sparser.replace(methods, "asnlib/ParkingSpace.java");
-				File tempf = new File("asnlib/ParkingLot.java");
-				File temps;
-				int count = 0;
-				if (files[0] != null) {
-					temps = new File(files[0].getParent() + "/ParkingLot.java");
-					Files.copy(tempf.toPath(), temps.toPath());
-					TestCase.compile(temps);
-					tests[12].setResult(true);
-					tests[20].setResult(TestCase.runMain(files[0].getParent(), "ParkingSpace", null, "(?s).*6.*A2 \\(C X\\).*"));
-				}
-				if (files[1] != null) {
-					tests[13].setResult(true);
-				}
-				if (files[2] != null) {
-					tests[14].setResult(true);
-				}
-				if (files[3] != null) {
-					tests[15].setResult(true);
-				}
-				if (files[4] != null) {
-					tests[16].setResult(true);
-				}
-				if (files[5] != null) {
-					tests[17].setResult(true);
-				}
-				if (files[6] != null) {
-					temps = new File(files[6].getParent() + "/ParkingLot.java");
-					Files.copy(tempf.toPath(), temps.toPath());
-					TestCase.compile(temps);
-					tests[18].setResult(true);
-					tests[19].setResult(TestCase.runMain(files[6].getParent(), "ParkingSpace", null, "(?s).*6.*A2 \\(C X\\).*"));
-				}
-				if (count == 4) tests[19].setResult(true);
-				int[] vars = new int[4];
-				boolean check;
-				for (FieldDeclaration f : sparser.fields) {
-					check = false;
-					for (Modifier m : f.getModifiers()) {
-						if (m.asString().equals("static")) {
-							check = true;
-						}
-					}
-					for (VariableDeclarator vd : f.getVariables()) {
-						if (!check && vd.getType().asString().equals("int")) vars[0]++;
-						if (!check && vd.getType().asString().equals("char")) vars[1]++;
-						if (!check && vd.getType().asString().equals("boolean")) vars[2]++;
-					}
-				}
-				tests[21].setResult(vars[0] >= 1 && vars[1] >= 1 && vars[2] >= 2);
-			}
-
- 			TestCase.pushAll(tests);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
-
 }
 }
