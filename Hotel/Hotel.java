@@ -1,60 +1,73 @@
 public class Hotel {
-  private String hotelName;
-  private Room[] rooms;
-  private int totalRooms;
 
-  public Hotel(String hotelName, int totalRooms, int totalFloors) {
-    int roomsperfloor = totalRooms/totalFloors;
-    this.totalRooms = totalRooms;
-    rooms = new Room[totalRooms];
-    for (int i = 0; i < totalFloors; i++) {
-      for (int j = 0; j < roomsperfloor; j++) {
-        if (j + 1 == roomsperfloor) {
-          rooms[i*roomsperfloor+j] = new Room(i*100+j, "suite");
-        } else if (j + 5 >= roomsperfloor) {
-          rooms[i*roomsperfloor+j] = new Room(i*100+j, "single king");
-        } else {
-          rooms[i*roomsperfloor+j] = new Room(i*100+j, "double queen");
+    private String hotelName;
+    private Room[] rooms;
+    private int totalRooms;
+
+    public Hotel(String hotelName, int totalRooms, int numFloors){
+        this.hotelName = hotelName;
+        this.totalRooms = totalRooms;
+        rooms = new Room[totalRooms];
+        int roomsPerFloor = totalRooms/numFloors;
+        int count = 0;
+        for (int f = 0; f < numFloors; f++ ) {
+            for (int r = 0; r < roomsPerFloor ; r++) {
+                if (r < roomsPerFloor - 5) {
+                    rooms[count] = new Room(100*(f + 1) + r, "double queen");
+                }
+                else if (r < roomsPerFloor - 1) {
+                    rooms[count] = new Room(100*(f+1) + r, "single king");
+                }
+                else {
+                    rooms[count] = new Room(100*(f+1) + r, "suite");
+                }
+                count++;
+            }
         }
-      }
     }
-  }
 
-  public int getTotalRooms() {
-    return totalRooms;
-  }
-
-  public int getNumberOccupied() {
-    int count = 0;
-    for (int i = 0; i < rooms.length; i++) {
-      if (rooms[i].getOccupantName() != null) {
-        count++;
-      }
+    public Room[] getRooms() {
+        return rooms;
     }
-    return count;
-  }
 
-  public double getOccupancyRate() {
-    return Math.round(((double)getNumberOccupied()/totalRooms)*100) / 100.0;
-  }
-
-  public boolean rentRoom(String type, String name, int days) {
-    for (int i = 0; i < rooms.length; i++) {
-      if (rooms[i].getOccupantName() == null && rooms[i].getRoomType().equals(type)) {
-        return rooms[i].setOccupant(name, days);
-      }
+    public int getTotalRooms() {
+        return totalRooms;
     }
-    return false;
-  }
 
-  public void advanceDay() {
-    for (int i = 0; i < rooms.length; i++) {
-      rooms[i].advanceDay();
+    public int getNumberOccupied() {
+        int numOccupied = 0;
+        for (Room r : rooms) {
+            if (r.getOccupantName() != null) {
+                numOccupied++;
+            }
+        }
+        return numOccupied;
     }
-  }
 
-  public String toString() {
-    return "The " + hotelName + ": " + getOccupancyRate() * 100 + "% occupied";
-  }
+    public double getOccupancyRate() {
+        return Math.round(100*(double)getNumberOccupied()/getTotalRooms())/100.0;
+    }
+
+    public boolean rentRoom(String roomType, String renterName, int daysRented) {
+        for (Room r : rooms) {
+            if (r.getOccupantName() == null && r.getRoomType().equals(roomType)) {
+                r.setOccupant(renterName, daysRented);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void advanceDay() {
+        for (Room r : rooms) {
+            if (r.getOccupantName() != null) {
+                r.advanceDay();
+            }
+        }
+    }
+
+    public String toString() {
+        return hotelName + ": " + Math.round(100*getOccupancyRate()) + "% occupied";
+    }
 
 }

@@ -128,7 +128,7 @@ public class Project {
 					temps = new File(files[6].getParent() + "/Room.java");
 					Files.copy(tempf.toPath(), temps.toPath());
 					TestCase.compile(temps);
-					tests[25].setResult(TestCase.runMain(files[6].getParent(), "Hotel", null, "(?s).*hotel.*11.0.*occupied.*"));
+					tests[25].setResult(TestCase.runMain(files[6].getParent(), "Hotel", null, "(?s).*hotel.*11.*occupied.*"));
 				}
 
 				tests[18].setResult(true);

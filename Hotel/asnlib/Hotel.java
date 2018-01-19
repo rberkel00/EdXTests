@@ -64,7 +64,7 @@ public class Hotel {
     int roomsperfloor = 10;
     for (int i = 0; i < 10; i++) {
       for (int j = 0; j < roomsperfloor; j++) {
-        if (h.rooms[i*roomsperfloor+j].getRoomNumber() != i*100+j) {
+        if (h.rooms[i*roomsperfloor+j].getRoomNumber() != (i+1)*100+j) {
           System.out.println("Constructor Failed");
         }
         if (j + 1 == roomsperfloor) {
