@@ -10,11 +10,11 @@ public class Hotel {
     for (int i = 0; i < totalFloors; i++) {
       for (int j = 0; j < roomsperfloor; j++) {
         if (j + 1 == roomsperfloor) {
-          rooms[i*roomsperfloor+j] = new Room(i*100+j, "suite");
+          rooms[i*roomsperfloor+j] = new Room((i+1)*100+j, "suite");
         } else if (j + 5 >= roomsperfloor) {
-          rooms[i*roomsperfloor+j] = new Room(i*100+j, "single king");
+          rooms[i*roomsperfloor+j] = new Room((i+1)*100+j, "single king");
         } else {
-          rooms[i*roomsperfloor+j] = new Room(i*100+j, "double queen");
+          rooms[i*roomsperfloor+j] = new Room((i+1)*100+j, "double queen");
         }
       }
     }
