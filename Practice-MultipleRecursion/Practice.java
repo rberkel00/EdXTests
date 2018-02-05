@@ -7,12 +7,12 @@ public class Practice {
                       a divided by 2 and the recursive call passing the remainder
                       of the quantity a - 1 divided by 2 ***/
 
-          //base case
-          if (a == 0){
-            return 1;
-          }
-          //recursive case
-          return mathy(a/2)+ mathy((a-1)/2);
+                      //base case
+                      if (a == 0){
+                        return 1;
+                      }
+                      //recursive case
+                      return mathy(a/2)+ mathy((a-1)/2);
      }
 
      public static void main(String[] args) {
