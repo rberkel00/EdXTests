@@ -1,47 +1,62 @@
-public class OnlineOrder {
-	String orderName;
-	double totalCost;
-	double tax;
-	int numTurkey;
-	int numItalian;
-	int numVeggie;
-	int numBLT;
-	final double TAX_RATE = 0.07;
-	public OnlineOrder(String name, int numT, int numI, int numV, int numB) {
-		orderName = name;
-		changeOrder(numT, numI, numV, numB);
-	}
-	public void changeOrder(int numT, int numI, int numV, int numB) {
-		if (numI >= 0) numItalian = numI;
+/**
+ * Kirsten M Martindale
+ * 2/2/18
+ * This is a program to calculate online sandwich orders
+ * */
+
+public class OnlineOrder
+{
+  private String orderName;
+  private double totalCost;
+  private double tax;
+  private int numTurkey;
+  private int numItalian;
+  private int numVeggie;
+  private int numBLT;
+  private final double TAX_RATE = .07;
+  private final double MEAT_SANDWICHS = 4.99;
+  private final double VEG_SANDWICHS = 3.99;
+
+  public OnlineOrder(String name, int turk, int ital, int veg, int blt)
+  {
+    orderName = name;
+    changeOrder(turk, ital, veg, blt);
+  }
+
+  public void changeOrder(int turk, int ital, int veg, int blt)
+  {
+    if(turk >= 0)
+      numTurkey = turk;
+		else numTurkey = 0;
+    if(ital >= 0)
+      numItalian = ital;
 		else numItalian = 0;
-		if (numV >= 0) numVeggie = numV;
+    if(veg >= 0)
+      numVeggie = veg;
 		else numVeggie = 0;
-		if (numB >= 0) numBLT = numB;
+    if(blt >= 0)
+      numBLT = blt;
 		else numBLT = 0;
-		totalCost = Math.round(100*((numTurkey + numItalian + numBLT) * 4.99 + numVeggie * 3.99))/100.0;
-		tax = totalCost * TAX_RATE;
-	}
-	public double getTotalCost() {
-		return totalCost;
-	}
-	public double getTax() {
-		return tax;
-	}
-	public String toString() {
-		return orderName + ", your order come to $" + (totalCost + tax);
-	}
-	public static void main(String[] args) {
-		OnlineOrder oo = new OnlineOrder("Spongebob", 3, 2, 1, 1);
-		System.out.println("tc1: " + oo.getTotalCost());
-		System.out.println("t1: " + oo.getTax());
-		System.out.println("ts1: " + oo.toString());
-		oo.changeOrder(1, 5, 2, 1);
-		System.out.println("tc2: " + oo.getTotalCost());
-		System.out.println("t2: " + oo.getTax());
-		System.out.println("ts2: " + oo.toString());
-		oo.changeOrder(-1, -5, 0, 2);
-		System.out.println("tc3: " + oo.getTotalCost());
-		System.out.println("t3: " + oo.getTax());
-		System.out.println("ts3: " + oo.toString());
-	}
+    totalCost = MEAT_SANDWICHS * (numTurkey + numItalian + numBLT) + VEG_SANDWICHS * numVeggie;
+		totalCose = Math.round(totalCost*100)/100.0;
+
+    tax = totalCost * TAX_RATE;  //rounding to two decimal places
+  }
+
+  public double getTotalCost()
+  {
+    return totalCost;
+  }
+
+  public double getTax()
+  {
+    return tax;
+  }
+
+  public String toString()
+  {
+    String temp = orderName + ", your order comes to $" + (totalCost+tax);
+
+    return temp;
+  }
 }

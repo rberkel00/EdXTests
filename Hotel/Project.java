@@ -15,6 +15,8 @@ public class Project {
 
 		//define tests
 		try {
+			boolean script = false;
+			if (args.length > 0) script = true;
 			TestCase[] tests = {
 				new TestCase("Test 1", "Room.java exists", "Completion", 1),
 				new TestCase("Test 2", "Hotel.java exists", "Completion", 1),
