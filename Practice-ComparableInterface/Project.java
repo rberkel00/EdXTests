@@ -17,8 +17,7 @@ public class Project {
 		try {
 			TestCase[] tests = {
 				new TestCase("Test 1", "File compiles", "Completion", 1),
-				new TestCase("Test 2", "Correct interface header declaration", "Completion", 1),
-				new TestCase("Test 3", "Correct method header", "Completion", 1),
+				new TestCase("Test 2", "Correct method header", "Completion", 1),
 				new TestCase("Test 3", "Correct output", "Completion", 1)
 			};
 
@@ -30,19 +29,18 @@ public class Project {
 
 			}
 
-			Parser lpar2 = 
 
 			Parser lpar = new Parser();
 			if (lpar.parse("Practice.java")) {
 				for (MethodDeclaration m : lpar.methods) {
-					if (m.getDeclarationAsString(false, false, false).matches(".*includeMe.*")) {
+					if (m.getDeclarationAsString(false, false, false).matches(".*compareTo.*")) {
 						//Correct method header test
-						tests[2].setResult(true);
+						tests[1].setResult(true);
 					}
 				}
 				System.out.println(TestCase.runMain(".", "Practice", null));
 				//Correct output test
-				tests[3].setResult(TestCase.runMain(".", "Practice", null, "(?s).*A practical method.*"));
+				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*-1.*0.*1.*-1.*1.*"));
 			}
 
 
