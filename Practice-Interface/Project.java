@@ -29,7 +29,6 @@ public class Project {
 
 			}
 
-			Parser lpar2 =
 
 			Parser lpar = new Parser();
 			if (lpar.parse("Practice.java")) {
