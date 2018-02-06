@@ -38,7 +38,7 @@ public class Project {
 						tests[1].setResult(true);
 					}
 				}
-				System.out.println(TestCase.runMain(".", "Practice", null));
+				//System.out.println(TestCase.runMain(".", "Practice", null));
 				//Correct output test
 				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*A practical method.*"));
 			}
