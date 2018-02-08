@@ -17,7 +17,8 @@ public class Practice {
           /*** TODO: Remove Alyssa from customers ***/
             customers.remove("Alyssa");
           /*** TODO: Set Pranav to Grace ***/
-            customers.set(2, "Grace");
+            //customers.set(2, "Grace");
+            customers.set(customers.indexOf("Pranav"), "Grace");
 
           String s;
           /*** TODO: Get the second element in the list and store in the
