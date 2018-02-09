@@ -8,7 +8,7 @@ public class Practice {
 
           /*** TODO: Add three Strings to customers in this order: Michael,
                       Alyssa, Pranav ***/
-            customers.add("Micheal");
+            customers.add("Michael");
             customers.add("Alyssa");
             customers.add("Pranav");
 
