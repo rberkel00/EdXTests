@@ -1,62 +1,37 @@
-/**
- * Kirsten M Martindale
- * 2/2/18
- * This is a program to calculate online sandwich orders
- * */
+import java.text.DecimalFormat;
 
-public class OnlineOrder
-{
-  private String orderName;
-  private double totalCost;
-  private double tax;
-  private int numTurkey;
-  private int numItalian;
-  private int numVeggie;
-  private int numBLT;
-  private final double TAX_RATE = .07;
-  private final double MEAT_SANDWICHS = 4.99;
-  private final double VEG_SANDWICHS = 3.99;
+public class OnlineOrder {
+    private String orderName;
+    private double totalCost, tax;
+    private int numTurkey = 0, numItalian = 0, numVeggie = 0, numBLT = 0;
+    public static final double TAX_RATE = 0.07;
+    public static final double TURKEY_PRICE = 4.99, ITALIAN_PRICE = 4.99, BLT_PRICE = 4.99, VEGGIE_PRICE=3.99;
 
-  public OnlineOrder(String name, int turk, int ital, int veg, int blt)
-  {
-    orderName = name;
-    changeOrder(turk, ital, veg, blt);
-  }
+    public OnlineOrder(String name, int numTurkey, int numItalian, int numVeggie, int numBLT){
+        this.orderName = name;
+        changeOrder(numTurkey, numItalian, numVeggie, numBLT);
+    }
 
-  public void changeOrder(int turk, int ital, int veg, int blt)
-  {
-    if(turk >= 0)
-      numTurkey = turk;
-		else numTurkey = 0;
-    if(ital >= 0)
-      numItalian = ital;
-		else numItalian = 0;
-    if(veg >= 0)
-      numVeggie = veg;
-		else numVeggie = 0;
-    if(blt >= 0)
-      numBLT = blt;
-		else numBLT = 0;
-    totalCost = MEAT_SANDWICHS * (numTurkey + numItalian + numBLT) + VEG_SANDWICHS * numVeggie;
-		totalCose = Math.round(totalCost*100)/100.0;
+    public void changeOrder(int numTurkey, int numItalian, int numVeggie, int numBLT){
+        if (numTurkey >= 0) this.numTurkey = numTurkey; else this.numTurkey=0;
+        if (numItalian >= 0) this.numItalian = numItalian; else this.numItalian = 0;
+        if (numVeggie >= 0) this.numVeggie = numVeggie; else this.numVeggie = 0;
+        if (numBLT >= 0) this.numBLT = numBLT; else this.numBLT = 0;
 
-    tax = totalCost * TAX_RATE;  //rounding to two decimal places
-  }
+        totalCost = (this.numTurkey * 4.99) + (this.numItalian * 4.99) +
+                (this.numVeggie * 3.99) + (this.numBLT * 4.99);
 
-  public double getTotalCost()
-  {
-    return totalCost;
-  }
+        //DecimalFormat df = new DecimalFormat("#.##");
+        //tax = Double.valueOf(df.format(totalCost * TAX_RATE));
+        tax = Math.round((totalCost * TAX_RATE) * 100) / 100.0;
+    }
 
-  public double getTax()
-  {
-    return tax;
-  }
+    public double getTotalCost(){ return totalCost;}
+    public double getTax() { return tax; }
 
-  public String toString()
-  {
-    String temp = orderName + ", your order comes to $" + (totalCost+tax);
+    public String toString(){
+        DecimalFormat df = new DecimalFormat("#.##");
 
-    return temp;
-  }
+        return orderName + ", your order comes to $" + (totalCost + tax);
+    }
 }

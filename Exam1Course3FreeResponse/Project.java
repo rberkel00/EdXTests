@@ -53,6 +53,7 @@ public class Project {
 				}
 				if (files[1] != null) {
 					acc[0] = true;
+					System.out.println(TestCase.runMain(files[1].getParent(), "OnlineOrder", null));
 					tests[6].setResult(TestCase.runMain(files[1].getParent(), "OnlineOrder", null, "(?s).*tc2: 42.91.*"));
 					tests[10].setResult(TestCase.runMain(files[1].getParent(), "OnlineOrder", null, "(?s).*tc3: 9.98.*"));
 				}
@@ -66,7 +67,8 @@ public class Project {
 				}
 				if (files[4] != null) {
 					acc[3] = true;
-					tests[8].setResult(TestCase.runMain(files[4].getParent(), "OnlineOrder", null, "(?s).*ts1: Spongebob.*\\$10.6.*"));
+					System.out.println(TestCase.runMain(files[4].getParent(), "OnlineOrder", null));
+					tests[8].setResult(TestCase.runMain(files[4].getParent(), "OnlineOrder", null, "(?s).*ts.: Spongebob.*\\$10.6.*"));
 				}
 
 				tests[3].setResult(true);
