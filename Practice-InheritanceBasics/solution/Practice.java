@@ -16,9 +16,9 @@
      /*** TODO: Write the header for the ChildClass constructor, taking two inputs, x and y ***/
       ChildClass(int x, int y)
      {
-          super(x,y);
-          this.x = 2 * x;
-          this.y = 2 * y;
+          super(2*x,2*y);
+        //  this.x = 2 * x;
+        //  this.y = 2 * y;
      }
 }
 
