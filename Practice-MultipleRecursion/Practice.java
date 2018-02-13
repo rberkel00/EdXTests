@@ -12,7 +12,7 @@ public class Practice {
                         return 1;
                       }
                       //recursive case
-                      return mathy(a/2)+ mathy((a-1)/2);
+                      return mathy(a/2)+ mathy((a-1)%2);
      }
 
      public static void main(String[] args) {

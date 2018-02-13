@@ -8,7 +8,7 @@ public class Practice {
 
           /*** TODO: Add three Strings to customers in this order: Michael,
                       Alyssa, Pranav ***/
-            customers.add("Micheal");
+            customers.add("Michael");
             customers.add("Alyssa");
             customers.add("Pranav");
 
@@ -17,7 +17,8 @@ public class Practice {
           /*** TODO: Remove Alyssa from customers ***/
             customers.remove("Alyssa");
           /*** TODO: Set Pranav to Grace ***/
-            customers.set(2, "Grace");
+            //customers.set(2, "Grace");
+            customers.set(customers.indexOf("Pranav"), "Grace");
 
           String s;
           /*** TODO: Get the second element in the list and store in the

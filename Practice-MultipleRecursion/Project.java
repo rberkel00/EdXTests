@@ -39,7 +39,7 @@ public class Project {
 					}
 				}
 				System.out.println(TestCase.runMain(".", "Practice", null));
-				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*13.*"));
+				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*7.*"));
 
 			}
  			TestCase.pushAll(tests);

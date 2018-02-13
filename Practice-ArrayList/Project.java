@@ -25,7 +25,7 @@ public class Project {
 				System.out.println("Practice.java does not compile.");
 			} else {
 				tests[0].setResult(true);
-				tests[1].setResult(TestCase.runMain(".", "Practice", null, "(?s).*LaKisha\nMicheal\nGrace\nMicheal.*"));
+				tests[1].setResult(TestCase.runMain(".", "Practice", null, "(?s).*LaKisha\nMichael\nGrace\nMichael.*"));
 				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*4.*"));
 			}
 
