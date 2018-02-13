@@ -17,7 +17,7 @@ public class Project {
 		try {
 			TestCase[] tests = {
 				new TestCase("Test 1", "File compiles", "Completion", 1),
-				new TestCase("Test 2", "scrambler is recurisive (makes a call to itself)", "Completion", 1),
+				new TestCase("Test 2", "scrambler is recursive (makes a call to itself)", "Completion", 1),
 				new TestCase("Test 3", "Base cases: 0, 1, 2", "Completion", 1),
 				new TestCase("Test 4", "scrambler works correctly", "Completion", 1)
 			};
