@@ -22,17 +22,17 @@ public class Project {
 				new TestCase("Test 4", "Correct output", "Completion", 1)
 			};
 
-			if (!TestCase.compile(new File("Practice.java"))) {
+			if (!TestCase.compile(new File("Practice.java")) || !TestCase.compile(new File("Runner.java"))) {
 				System.out.println("Practice.java does not compile.");
 			} else {
 				tests[0].setResult(true);
-				tests[3].setResult(TestCase.runMain(".", "Practice", null, "(?s).*1.*"));
+				tests[3].setResult(TestCase.runMain(".", "Runner", null, "(?s).*1.*"));
 			}
 
 			Parser lpar = new Parser();
 			if (lpar.parse("Practice.java")) {
 				for (MethodDeclaration m : lpar.methods) {
-					if (m.getDeclarationAsString(true, false, false).equals("private int getA()")) {
+					if (m.getDeclarationAsString(true, false, false).equals("public int getA()")) {
 						tests[2].setResult(true);
 					}
 				}
