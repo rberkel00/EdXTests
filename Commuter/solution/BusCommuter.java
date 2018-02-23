@@ -19,6 +19,7 @@ public class BusCommuter extends PayCommuter {
 			super.payFare(super.getFare());
 			super.addMiles(miles);
 		}
+		paid = false;
 	}
 
 	public String toString() {
