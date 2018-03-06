@@ -20,7 +20,7 @@ public class Project {
 				new TestCase("Test 2", "Correct output", "Completion", 1)
 			};
 
-			if (!TestCase.compile(new File("Practice.java"))) {
+			if (!TestCase.compile(new File("BaseClass.java")) && !TestCase.compile(new File("ChildClass.java")) && !TestCase.compile(new File("Practice.java"))) {
 				System.out.println("Practice.java does not compile.");
 			} else {
 				tests[0].setResult(true);

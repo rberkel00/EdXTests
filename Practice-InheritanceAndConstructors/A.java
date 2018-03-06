@@ -3,7 +3,7 @@ public class A {
 
      public A() {
          /*** TODO: Call the parameterized constructor with the values a = 1, b = 2, c = 3 ***/
-         
+         this(1,2,3);
 
      }
 

@@ -1,9 +1,13 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.io.File;
+import java.util.*;
 
 public class CardCollection {
   private String owner;
   private List<Card> myCollection;
+  private String NEWVARIABLE;
+  public double HELLO = 2.99;
 
   public CardCollection(String owner) {
     this.owner = owner;

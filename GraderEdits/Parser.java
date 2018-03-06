@@ -16,6 +16,7 @@ import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.metamodel.*;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.*;
+import java.util.Arrays;
 
 public class Parser {
 
@@ -57,6 +58,8 @@ public class Parser {
 
 	public ClassOrInterfaceDeclaration coid;
 
+	public CompilationUnit cu;
+
 	/*
 	* Initializes list fields
 	*/
@@ -89,7 +92,7 @@ public class Parser {
 
 			//try to retrieve nodes
 			if (!result.getResult().isPresent()) return false;
-			CompilationUnit cu = result.getResult().get();
+			this.cu = result.getResult().get();
 
 			//get comments, methods, fields, and constructors
 			comments = cu.getComments();
@@ -222,6 +225,63 @@ public class Parser {
 
 	}
 
+	public List<ImportDeclaration> addExtraImports(CompilationUnit from, CompilationUnit to) {
+		List<ImportDeclaration> list = new ArrayList<ImportDeclaration>();
+		for (ImportDeclaration i : from.getImports()) {
+			boolean found = false;
+			for (ImportDeclaration d : to.getImports()) {
+				if (i.equals(d)) {
+					found = true;
+				}
+			}
+			if (!found) {
+				to.addImport(i);
+				list.add(i);
+			}
+		}
+		return list;
+	}
+
+	public List<FieldDeclaration> addExtraFieldsAndMethods(ClassOrInterfaceDeclaration from, ClassOrInterfaceDeclaration to) {
+		List<FieldDeclaration> list = new ArrayList<FieldDeclaration>();
+		List<FieldDeclaration> existing = new ArrayList<FieldDeclaration>();
+		for (Node n : to.getChildNodes()) {
+			if (n instanceof FieldDeclaration) {
+				existing.add((FieldDeclaration)n);
+			}
+		}
+		for (Node n : from.getChildNodes()) {
+			if (n instanceof FieldDeclaration) {
+				FieldDeclaration f = (FieldDeclaration)n;
+				for (VariableDeclarator v : f.getVariables()) {
+					boolean found = false;
+					for (FieldDeclaration i : existing) {
+						for (VariableDeclarator x : i.getVariables()) {
+							if (v.getName().asString().equals(x.getName().asString())) {
+								found = true;
+							}
+						}
+					}
+					if (!found) {
+						//add the variable declarator to its own field declaration and add it to the list
+						FieldDeclaration nf = f.clone();
+						NodeList<VariableDeclarator> nl = new NodeList<VariableDeclarator>();
+						nl.add(v);
+						nf.setVariables(nl);
+						list.add(nf);
+						System.out.println(nf.toString());
+						//add the field declaration to the to class
+						Modifier[] m = new Modifier[nf.getModifiers().size()];
+						m = nf.getModifiers().toArray(m);
+						System.out.println(v.getType() + " " + v.getName().asString() + " " + Arrays.toString(m));
+						to.addField(v.getType(), v.getName().asString(), m);
+					}
+				}
+			}
+		}
+		return list;
+	}
+
 	/**
 	* Looks for method signature in "methods" class field. If found, then looks for method signature in "file" (String parameter).
 	* If found, it takes the method body of method in "methods" class field and replaces method body in "file" with it.
@@ -238,6 +298,8 @@ public class Parser {
 		ClassOrInterfaceDeclaration coid = getClassFromFile(f, cu);
 		CallableDeclaration replacement = findMethodOrConstructor(this.coid, signature);
 		CallableDeclaration current = findMethodOrConstructor(coid, signature);
+		List<ImportDeclaration> list = addExtraImports(this.cu, cu);
+		List<FieldDeclaration> fields = addExtraFieldsAndMethods(this.coid, coid);
 
 		if (replacement == null || current == null) return null;
 
