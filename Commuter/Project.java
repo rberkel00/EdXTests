@@ -72,7 +72,7 @@ public class Project {
 					Files.copy(b1.toPath(), b.toPath());
 					TestCase.compile(a);
 					TestCase.compile(b);
-					tests[7].setResult(TestCase.runMain(files[3].getParent(), "PayCommuter", null, "(?s).*check1: false 0.*check2: true 5.*"));
+					tests[7].setResult(TestCase.runMain(files[3].getParent(), "PayCommuter", null, "(?s).*check1: false 0.*check2: true 0.*check3: false 5.*"));
 				}
 				if (files[4] != null) {
 					ms[4] = true;
@@ -84,7 +84,7 @@ public class Project {
 					Files.copy(b1.toPath(), b.toPath());
 					TestCase.compile(a);
 					TestCase.compile(b);
-					tests[8].setResult(TestCase.runMain(files[4].getParent(), "PayCommuter", null, "(?s).*check1: false 0.*check2: true 5.*"));
+					tests[8].setResult(TestCase.runMain(files[4].getParent(), "PayCommuter", null, "(?s).*check1: false 0.*check2: true 0.*check3: false 5.*"));
 				}
 				if (files[5] != null) {
 					ms[5] = true;

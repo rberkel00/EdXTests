@@ -25,6 +25,7 @@ public class PayCommuter extends Commuter {
 		if (paid) {
 			super.addMiles(miles);
 		}
+		paid = false;
 	}
 
 	public String toString() {
