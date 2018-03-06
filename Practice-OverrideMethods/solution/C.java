@@ -4,7 +4,7 @@ public class C extends A {
      }
 
      /*** TODO: Write an overrided method header for the doSomething method ***/
-     
+     public int doSomething(int b)
      {
           return super.doSomething(2) + b;
      }
