@@ -242,9 +242,9 @@ public class Project {
 
 			Parser usp = new Parser();
 			if (usp.parse("World.java")) {
-				String[] methods = {"World(int, int)","int getWidth()","int getHeight()", "Boat getOccupant(Coordinates)", "boolean isLocationValid(Coordinates)", "boolean isLocationOccupied(Coordinates)", "void empty(Coordinates)", "boolean setOccupant(Boat, Coordinates)", "Coordinates getAdjacentLocation(Coordinates, int)", "String drawTeamMap(Boat[], int)"};
+				String[] methods = {"World(int, int)","int getWidth()","int getHeight()", "Boat getOccupant(Coordinates)", "boolean isLocationValid(Coordinates)", "boolean isLocationOccupied(Coordinates)", "boolean setOccupant(Boat, Coordinates)", "Coordinates getAdjacentLocation(Coordinates, int)", "String drawTeamMap(Boat[], int)"};
 				File[] files = usp.replace(methods, "asnlib/World.java");
-				boolean[] ms = new boolean[10];
+				boolean[] ms = new boolean[9];
 				if (files[0] != null) {
 					ms[0] = true;
 					File a = new File(files[0].getParent() + "/Boat.java");
@@ -293,6 +293,20 @@ public class Project {
 				}
 				if (files[6] != null) {
 					ms[6] = true;
+					File a = new File(files[6].getParent() + "/Boat.java");
+					File b = new File(files[6].getParent() + "/BoatA.java");
+					File c = new File(files[6].getParent() + "/Coordinates.java");
+					File a1 = new File("asnlib/Boat.java");
+					File b1 = new File("asnlib/BoatA.java");
+					File c1 = new File("asnlib/Coordinates.java");
+					Files.copy(a1.toPath(), a.toPath());
+					Files.copy(b1.toPath(), b.toPath());
+					Files.copy(c1.toPath(), c.toPath());
+					TestCase.compile(files[6]);
+					TestCase.compile(c);
+					TestCase.compile(a);
+					TestCase.compile(b);
+					tests[6].setResult(TestCase.runMain(files[6].getParent(), "BoatA", null, "(?s).*Pass 50.*Pass 50.*Pass 50.*"));
 				}
 				if (files[7] != null) {
 					ms[7] = true;
@@ -309,7 +323,8 @@ public class Project {
 					TestCase.compile(c);
 					TestCase.compile(a);
 					TestCase.compile(b);
-					tests[6].setResult(TestCase.runMain(files[7].getParent(), "BoatA", null, "(?s).*Pass 50.*Pass 50.*Pass 50.*"));
+					tests[7].setResult(TestCase.runMain(files[7].getParent(), "BoatA", null, "(?s).*Pass 60.*"));
+					tests[8].setResult(TestCase.runMain(files[7].getParent(), "BoatA", null, "(?s).*Pass 70.*"));
 				}
 				if (files[8] != null) {
 					ms[8] = true;
@@ -326,27 +341,9 @@ public class Project {
 					TestCase.compile(c);
 					TestCase.compile(a);
 					TestCase.compile(b);
-					tests[7].setResult(TestCase.runMain(files[8].getParent(), "BoatA", null, "(?s).*Pass 60.*"));
-					tests[8].setResult(TestCase.runMain(files[8].getParent(), "BoatA", null, "(?s).*Pass 70.*"));
-				}
-				if (files[9] != null) {
-					ms[9] = true;
-					File a = new File(files[9].getParent() + "/Boat.java");
-					File b = new File(files[9].getParent() + "/BoatA.java");
-					File c = new File(files[9].getParent() + "/Coordinates.java");
-					File a1 = new File("asnlib/Boat.java");
-					File b1 = new File("asnlib/BoatA.java");
-					File c1 = new File("asnlib/Coordinates.java");
-					Files.copy(a1.toPath(), a.toPath());
-					Files.copy(b1.toPath(), b.toPath());
-					Files.copy(c1.toPath(), c.toPath());
-					TestCase.compile(files[9]);
-					TestCase.compile(c);
-					TestCase.compile(a);
-					TestCase.compile(b);
-					tests[9].setResult(TestCase.runMain(files[9].getParent(), "BoatA", null, "(?s).*Pass 80.*"));
-					tests[10].setResult(TestCase.runMain(files[9].getParent(), "BoatA", null, "(?s).*Pass 90.*"));
-					tests[11].setResult(TestCase.runMain(files[9].getParent(), "BoatA", null, "(?s).*Pass 21.*"));
+					tests[9].setResult(TestCase.runMain(files[8].getParent(), "BoatA", null, "(?s).*Pass 80.*"));
+					tests[10].setResult(TestCase.runMain(files[8].getParent(), "BoatA", null, "(?s).*Pass 90.*"));
+					tests[11].setResult(TestCase.runMain(files[8].getParent(), "BoatA", null, "(?s).*Pass 21.*"));
 				}
 
 				tests[5].setResult(true);

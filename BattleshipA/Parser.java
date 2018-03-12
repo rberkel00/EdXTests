@@ -198,7 +198,8 @@ public class Parser {
 								File directory = new File(temp);
 								directory.mkdir();
 								File newfile = new File(temp + "/" + f.getName());
-								PrintWriter pw = new PrintWriter(newfile);
+								PrintWriter pw = new PrintWriter(new OutputStreamWriter(
+										new FileOutputStream(newfile), "UTF-8"));
 								pw.write(cu.toString());
 								pw.close();
 								return newfile;

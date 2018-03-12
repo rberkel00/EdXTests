@@ -187,7 +187,11 @@ public class TestCase {
 
 	public static boolean compile(File submission) throws Exception {
 		if (submission == null) return false;
-		Process pro = Runtime.getRuntime().exec("javac " + submission.getPath());
+		Process pro;
+		if (submission.getParent() == null)
+			pro = Runtime.getRuntime().exec("javac -encoding utf8 " + submission.getPath());
+		else
+			pro = Runtime.getRuntime().exec("javac -encoding utf8 " + submission.getName(), null, new File(submission.getParent()));
 		String error = streamError(pro);
 		return error.length() == 0;
 	}

@@ -139,14 +139,14 @@ public class World {
 				      that is returned to the function caller
 		***/
         String drawMap = "";
-        String[][] teamView = new String[this.getWidth()][this.getHeight()];
+        String[][] teamView = new String[this.getHeight()][this.getWidth()];
         int yStart, yEnd, xStart, xEnd;
         Coordinates boatLocation;
 
         /*** TODO: Write a for-loop that repeats for each row in the map ***/
-        for (int x = 0; x < this.getWidth(); x++){
+        for (int x = 0; x < this.getHeight(); x++){
             /*** TODO: Write a for-loop that repeats for each column in the map ***/
-          for (int y = 0; y < this.getHeight(); y++)  {
+          for (int y = 0; y < this.getWidth(); y++)  {
                 /*** TODO: Set each spot in the teamView array to the non-visible String (i.e., "###") ***/
                 teamView[x][y] = "###";
             }
@@ -185,17 +185,17 @@ public class World {
 							           current space (in which case, we'll store the water String)
                             ***/
                             if (!isLocationOccupied(new Coordinates(x,y)))
-                                teamView[x][y] = "~~~";
-                            else if (((Boat)map[x][y]).getHealth() <= 0)
-                                teamView[x][y] = " ~ ";
+                                teamView[y][x] = "~~~";
+                            else if (((Boat)map[y][x]).getHealth() <= 0)
+                                teamView[y][x] = " ~ ";
                             else
                             {
                                 /*** TODO: Write a conditional and the corresponding branches that add the boat
 								           String with the appropriate information (location or direction) for
 										   each boat that can be seen by the current boat
 								***/
-                                if (view == 2) teamView[x][y] = ((Boat)map[x][y]).getDirection() + "" + ((Boat)map[x][y]).getID();
-                                else if (view == 3) teamView[x][y] = ((Boat)map[x][y]).getHealth() + "" + ((Boat)map[x][y]).getID();
+                                if (view == 2) teamView[y][x] = ((Boat)map[y][x]).getDirection() + "" + ((Boat)map[y][x]).getID();
+                                else if (view == 3) teamView[y][x] = ((Boat)map[y][x]).getHealth() + "" + ((Boat)map[y][x]).getID();
                             }
                         }
                     }
@@ -217,7 +217,7 @@ public class World {
                 }
                 else
                 {
-                    drawMap += teamView[x][y];
+                    drawMap += teamView[y][x];
                 }
             }
             drawMap += "\n";
