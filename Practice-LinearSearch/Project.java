@@ -17,18 +17,29 @@ public class Project {
 		try {
 			TestCase[] tests = {
 				new TestCase("Test 1", "File compiles", "Completion", 1),
-				new TestCase("Test 2", "Correct array list output", "Completion", 1),
-				new TestCase("Test 3", "Correct array list size", "Completion", 1)
+				new TestCase("Test 2", "Loop is created", "Completion", 1),
+				new TestCase("Test 3", "Conditional statement is created", "Completion", 1),
+				new TestCase("Test 4", "Output is correct", "Completion", 1)
 			};
 
 			if (!TestCase.compile(new File("Practice.java"))) {
 				System.out.println("Practice.java does not compile.");
 			} else {
 				tests[0].setResult(true);
-				tests[1].setResult(TestCase.runMain(".", "Practice", null, "(?s).*LaKisha\nMichael\nGrace\nMichael.*"));
-				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*4.*"));
+				tests[3].setResult(TestCase.runMain(".", "Practice", null, "(?s).*position 304 of our list.*"));
 			}
 
+			Parser p = new Parser();
+			if (p.parse("Practice.java")) {
+				List<Node> snodes = p.findPieces("int linear(ArrayList<Comparable>, Comparable)");
+				for (Node n : snodes) {
+					if (n instanceof ForeachStmt || n instanceof ForStmt || n instanceof WhileStmt || n instanceof DoStmt) {
+						tests[1].setResult(true);
+					} else if (n instanceof ConditionalExpr || n instanceof IfStmt || n instanceof SwitchStmt) {
+						tests[2].setResult(true);
+					}
+				}
+			}
 
  			TestCase.pushAll(tests);
 
