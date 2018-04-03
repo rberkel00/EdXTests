@@ -22,7 +22,7 @@ public class TestCase {
 
 	/**
 	* @param name name of test (typically Test 1, Test 2, etc)
-	* @param message message of test, overall description that conveys to student what this test is grading
+	* @param message message of test, overall description hat conveys to student what this test is grading
 	* @param category corresponding Vocareum category (Ex. Completion, Correctness, Style, etc)
 	* @param value point value of test
 	* @param result true if test should be counted as passed, false if test should be counted as failed
@@ -189,7 +189,8 @@ public class TestCase {
 		if (submission == null) return false;
 		Process pro = Runtime.getRuntime().exec("javac " + submission.getPath());
 		String error = streamError(pro);
-		return error.length() == 0;
+		if (error.toLowerCase().indexOf("error") != -1) return false;
+		return true;
 	}
 
 	/**
