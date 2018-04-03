@@ -7,7 +7,7 @@ public class Practice {
           long startTime, endTime;
           startTime = System.nanoTime();
 
-          /*** TODO: Write the outer for-loop that repeats once for every item in data ***/
+          /*** TODO: Write the outer for-loop that repeats once for every item in dat ***/
           for (int i = 0; i < data.size(); i++){
                /*** TODO: Write the inner for-loop that repeats once for every item in
                           data (NOTE: You can optimize this using the variable from the
