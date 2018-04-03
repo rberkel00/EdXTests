@@ -17,18 +17,28 @@ public class Project {
 		try {
 			TestCase[] tests = {
 				new TestCase("Test 1", "File compiles", "Completion", 1),
-				new TestCase("Test 2", "Correct array list output", "Completion", 1),
-				new TestCase("Test 3", "Correct array list size", "Completion", 1)
+				new TestCase("Test 2", "Correct selection statements", "Completion", 1)
 			};
 
 			if (!TestCase.compile(new File("Practice.java"))) {
 				System.out.println("Practice.java does not compile.");
 			} else {
 				tests[0].setResult(true);
-				tests[1].setResult(TestCase.runMain(".", "Practice", null, "(?s).*LaKisha\nMichael\nGrace\nMichael.*"));
-				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*4.*"));
 			}
 
+			Parser p = new Parser();
+			if (p.parse("Practice.java")) {
+				List<Node> snodes = p.findPieces("int binary(ArrayList<Comparable>, Comparable, int, int)");
+				int count = 0;
+				for (Node n : snodes) {
+				 	if (n instanceof ConditionalExpr || n instanceof IfStmt || n instanceof SwitchStmt) {
+						count++;
+					}
+				}
+				if (count >= 3 ){
+					tests[1].setResult(true);
+				}
+			}
 
  			TestCase.pushAll(tests);
 

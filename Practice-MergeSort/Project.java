@@ -17,16 +17,14 @@ public class Project {
 		try {
 			TestCase[] tests = {
 				new TestCase("Test 1", "File compiles", "Completion", 1),
-				new TestCase("Test 2", "Correct array list output", "Completion", 1),
-				new TestCase("Test 3", "Correct array list size", "Completion", 1)
+				new TestCase("Test 2", "Correct output", "Completion", 1)
 			};
 
 			if (!TestCase.compile(new File("Practice.java"))) {
 				System.out.println("Practice.java does not compile.");
 			} else {
 				tests[0].setResult(true);
-				tests[1].setResult(TestCase.runMain(".", "Practice", null, "(?s).*LaKisha\nMichael\nGrace\nMichael.*"));
-				tests[2].setResult(TestCase.runMain(".", "Practice", null, "(?s).*4.*"));
+				tests[1].setResult(TestCase.runMain(".", "Practice", null, "(?s).*[95, 43, 96, 55, 44, 33, 34, 67, 0, 33, 10, 87, 73, 15, 21, 10, 72, 78, 10, 50].*"));
 			}
 
 
