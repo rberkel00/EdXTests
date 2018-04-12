@@ -190,7 +190,7 @@ public class TestCase {
 		Process q = Runtime.getRuntime().exec("ls " + submission.getParent());
 		String output = streamOutput(q);
 		//System.out.println(output);
-		Process pro = Runtime.getRuntime().exec("javac " + submission.getPath());
+		Process pro = Runtime.getRuntime().exec("javac -cp " + submission.getParent() + " " + submission.getPath());
 		String error = streamError(pro);
 		//System.out.println(error);
 		if (error.toLowerCase().indexOf("error") != -1) return false;

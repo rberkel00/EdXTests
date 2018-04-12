@@ -56,9 +56,8 @@ public class Project {
 								TestCase.compile(temps);
 								//make regex
 								msig[0] = true;
-
 								tests[5].setResult(TestCase.runMain(files[1].getParent(), "FilteredPixel", null, "(?s).*test2: .*test6: .*"));
-								tests[5].setResult(true);
+								//tests[5].setResult(true);
 							}
 							if (files[2] != null) {
 								//move Pixel in temp folder and compile
@@ -69,7 +68,7 @@ public class Project {
 								//make regex
 								msig[1] = true;
 								tests[6].setResult(TestCase.runMain(files[2].getParent(), "FilteredPixel", null, "(?s).*test3: .*test7: .*"));
-								tests[6].setResult(true);
+								//tests[6].setResult(true);
 			 				}
 							if (files[3] != null) {
 								//move Pixel in temp folder and compile
@@ -80,7 +79,7 @@ public class Project {
 								//make regex
 								msig[2] = true;
 								tests[7].setResult(TestCase.runMain(files[3].getParent(), "FilteredPixel", null, "(?s).*test4: .*test8: .*"));
-								tests[7].setResult(true);
+								//tests[7].setResult(true);
 			 				}
 							if (files[4] != null) {
 								//move Pixel in temp folder and compile
@@ -89,9 +88,8 @@ public class Project {
 								Files.copy(tempf.toPath(), temps.toPath());
 								TestCase.compile(temps);
 								//make regex
-								tests[4].setResult(true);
 								tests[8].setResult(TestCase.runMain(files[4].getParent(), "FilteredPixel", null, "(?s).*test9: .*test10: .*"));
-								tests[8].setResult(true);
+								//tests[8].setResult(true);
 			 				}
 
 							tests[1].setResult(true);
